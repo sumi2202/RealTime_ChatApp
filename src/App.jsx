@@ -2,6 +2,20 @@ import { useState } from 'react'
 
 
 function App() {
+
+  useEffect(() => {
+    SupabaseAuthClient.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    const {
+      data: {subscription},
+    } = SupabaseAuthClient.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
   
   return ( 
   <div className="w-full flex h-screen justify-center items-center p-4">
